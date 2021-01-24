@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Controls, defaultParams } from "./components/controls/Controls";
 import { DrawingCanvas } from "./components/drawingCanvas/DrawingCanvas";
+import { loadImage } from "./helpers/helpers";
 
 const App = () => {
   const [params, setParams] = useState(defaultParams);
@@ -34,8 +35,7 @@ const App = () => {
     const { width: origW, height: origH } = pics.bottomPic;
     const { w: targW, h: targH } = canvasDimensions;
 
-    // create a canvas from masked image
-
+    // add a red colour behind to show up undeleted bits easily
     const ctx = canvas.getContext("2d");
     ctx.fillStyle = "red";
     ctx.fillRect(0, 0, targW, targH);
@@ -59,7 +59,9 @@ const App = () => {
     }
 
     if (params.showTopPic) {
+      ctx.globalAlpha = params.topOpacity;
       ctx.drawImage(maskedCanvas, 0, 0);
+      ctx.globalAlpha = 1;
     }
   }, [maskImgObj, pics, canvasDimensions, params]);
 
@@ -87,16 +89,3 @@ const App = () => {
 };
 
 export default App;
-
-// const drawCanvas = (ctx, source) => {
-//   ctx.drawImage(source, 0, 0);
-// };
-
-const loadImage = (src, callback) => {
-  const image = new Image();
-  image.crossOrigin = "Anonymous";
-  image.onload = () => {
-    callback(image);
-  };
-  image.src = src;
-};

@@ -1,9 +1,14 @@
 import React from "react";
+import { SliderControl } from "../slider/SliderControl";
 
 export const Controls = ({ params, setParams }) => {
   return (
     <div>
       <h1>Controls</h1>
+      <SliderControl
+        value={params.topOpacity}
+        onChange={(newValue) => setParams({ ...params, topOpacity: newValue })}
+      />
       <label>
         SHOW TOP PIC:{" "}
         <input

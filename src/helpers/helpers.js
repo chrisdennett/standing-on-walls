@@ -1,5 +1,15 @@
 import { saveAs } from "file-saver";
 
+// LOAD IN IMGAGE (e.g. for a sample image)
+export const loadImage = (src, callback) => {
+  const image = new Image();
+  image.crossOrigin = "Anonymous";
+  image.onload = () => {
+    callback(image);
+  };
+  image.src = src;
+};
+
 // SAVE CANVAS TO FILE
 export const saveCanvas = (sourceCanvas, filename = "standing-on-walls") => {
   if (!sourceCanvas) return;
