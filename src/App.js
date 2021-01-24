@@ -1,20 +1,22 @@
 import React, { useState, useEffect } from "react";
+import { Controls, defaultParams } from "./components/controls/Controls";
 import { DrawingCanvas } from "./components/drawingCanvas/DrawingCanvas";
 
 const App = () => {
+  const [params, setParams] = useState(defaultParams);
   const [canvasDimensions, setCanvasDimensions] = useState({ w: 800, h: 100 });
   const [maskImgObj, setMaskImgObj] = useState({ data: 0, canvas: null });
-  const [pics, setPics] = useState({ pic1: null, pic2: null });
+  const [pics, setPics] = useState({ bottomPic: null, topPic: null });
   const canvasRef = React.useRef(null);
 
   // load samples if nothing set
   useEffect(() => {
-    if (!pics.pic1) {
-      loadImage("./pic-1.jpg", (img) => setPics({ ...pics, pic1: img }));
-    } else if (!pics.pic2) {
-      loadImage("./pic-2.jpg", (img) => setPics({ ...pics, pic2: img }));
+    if (!pics.bottomPic) {
+      loadImage("./pic-1.jpg", (img) => setPics({ ...pics, bottomPic: img }));
+    } else if (!pics.topPic) {
+      loadImage("./pic-2.jpg", (img) => setPics({ ...pics, topPic: img }));
     } else {
-      const { width: origW, height: origH } = pics.pic1;
+      const { width: origW, height: origH } = pics.bottomPic;
       const wToHRatio = origH / origW;
 
       const canvas = canvasRef.current;
@@ -26,14 +28,24 @@ const App = () => {
   }, [pics]);
 
   useEffect(() => {
-    if (!pics || !pics.pic1 || !pics.pic2) return;
+    if (!pics || !pics.bottomPic || !pics.topPic) return;
 
     const canvas = canvasRef.current;
-    const { width: origW, height: origH } = pics.pic1;
+    const { width: origW, height: origH } = pics.bottomPic;
     const { w: targW, h: targH } = canvasDimensions;
 
     // create a canvas from masked image
 
+    const ctx = canvas.getContext("2d");
+    ctx.fillStyle = "red";
+    ctx.fillRect(0, 0, targW, targH);
+
+    // DRAW bottom pic
+    if (params.showBottomPic) {
+      ctx.drawImage(pics.bottomPic, 0, 0, origW, origH, 0, 0, targW, targH);
+    }
+
+    // CREATE MASKED TOP CANVAS
     const maskedCanvas = document.createElement("canvas");
     maskedCanvas.width = targW;
     maskedCanvas.height = targH;
@@ -42,14 +54,14 @@ const App = () => {
 
     if (maskImgObj.canvas) {
       maskCtx.drawImage(maskImgObj.canvas, 0, 0);
-      maskCtx.globalCompositeOperation = "source-in";
-      maskCtx.drawImage(pics.pic2, 0, 0, origW, origH, 0, 0, targW, targH);
+      maskCtx.globalCompositeOperation = "source-out";
+      maskCtx.drawImage(pics.topPic, 0, 0, origW, origH, 0, 0, targW, targH);
     }
 
-    const ctx = canvas.getContext("2d");
-    ctx.drawImage(pics.pic1, 0, 0, origW, origH, 0, 0, targW, targH);
-    ctx.drawImage(maskedCanvas, 0, 0);
-  }, [maskImgObj, pics, canvasDimensions]);
+    if (params.showTopPic) {
+      ctx.drawImage(maskedCanvas, 0, 0);
+    }
+  }, [maskImgObj, pics, canvasDimensions, params]);
 
   const onMaskImgObjChange = (canvas) => {
     setMaskImgObj((prev) => {
@@ -59,6 +71,9 @@ const App = () => {
 
   return (
     <div>
+      <div>
+        <Controls params={params} setParams={setParams} />
+      </div>
       {canvasDimensions && (
         <DrawingCanvas
           onUpdateCanvas={onMaskImgObjChange}
