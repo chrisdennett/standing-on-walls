@@ -17,6 +17,8 @@ export const DrawingCanvas = ({
     c.height = height;
     const ctx = c.getContext("2d");
     ctx.clearRect(0, 0, c.width, c.height);
+    onUpdateCanvas(c);
+    // eslint-disable-next-line
   }, [canvas, width, height]);
 
   const onMouseDown = (e) => {
@@ -31,6 +33,7 @@ export const DrawingCanvas = ({
     c.height = height;
     const ctx = c.getContext("2d");
     ctx.clearRect(0, 0, c.width, c.height);
+    onUpdateCanvas(c);
   };
 
   const onMouseMove = (e) => {

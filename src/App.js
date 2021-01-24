@@ -5,7 +5,7 @@ import { loadImage } from "./helpers/helpers";
 
 const App = () => {
   const [params, setParams] = useState(defaultParams);
-  const [canvasDimensions, setCanvasDimensions] = useState({ w: 800, h: 100 });
+  const [canvasDimensions, setCanvasDimensions] = useState(null);
   const [maskImgObj, setMaskImgObj] = useState({ data: 0, canvas: null });
   const [pics, setPics] = useState({ bottomPic: null, topPic: null });
   const canvasRef = React.useRef(null);
@@ -29,13 +29,13 @@ const App = () => {
   }, [pics]);
 
   useEffect(() => {
-    if (!pics || !pics.bottomPic || !pics.topPic) return;
+    if (!pics || !pics.bottomPic || !pics.topPic || !canvasDimensions) return;
 
     const canvas = canvasRef.current;
     const { w: targW, h: targH } = canvasDimensions;
 
     drawCanvas({ params, canvas, targW, targH, pics, maskImgObj });
-  }, [maskImgObj, pics, canvasDimensions, params]);
+  });
 
   const onMaskImgObjChange = (canvas) => {
     setMaskImgObj((prev) => {

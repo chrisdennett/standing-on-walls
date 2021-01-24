@@ -53,7 +53,7 @@ export const Controls = ({ params, setParams }) => {
 export const defaultParams = {
   showTopPic: true,
   showBottomPic: true,
-  topOpacity: 0,
+  topOpacity: 1,
   bottomX: 0,
   bottomY: 0,
   bottomSizeFraction: 1,
