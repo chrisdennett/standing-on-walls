@@ -7,8 +7,6 @@ export const DrawingCanvas = ({
   brushWidth = 50,
 }) => {
   const [isDrawing, setIsDrawing] = useState(false);
-  const [point, setPoint] = useState(null);
-  //   const [isSetup, setIsSetUp] = useState(false);
 
   const canvas = useRef(null);
 
@@ -24,26 +22,50 @@ export const DrawingCanvas = ({
   const onMouseDown = (e) => {
     setIsDrawing(true);
     const newPt = getPointFromMouseEvent(e);
-    setPoint(newPt);
+    drawPoint(newPt);
   };
 
-  //   const clearCanvas = () => {
-  //     const c = canvas.current;
-  //     c.width = width;
-  //     c.height = height;
-  //     const ctx = c.getContext("2d");
-  //     ctx.clearRect(0, 0, c.width, c.height);
-  //   };
+  const clearCanvas = () => {
+    const c = canvas.current;
+    c.width = width;
+    c.height = height;
+    const ctx = c.getContext("2d");
+    ctx.clearRect(0, 0, c.width, c.height);
+  };
 
   const onMouseMove = (e) => {
     if (!isDrawing) return;
 
-    const newPt = { ...getPointFromMouseEvent(e), lineDrawn: true };
-    const from = point ? point : newPt;
-    const to = newPt;
+    const newPt = getPointFromMouseEvent(e);
+    drawPoint(newPt);
+  };
 
-    drawLine(from, to);
-    setPoint(newPt);
+  const drawPoint = (pt) => {
+    const c = canvas.current;
+    const ctx = c.getContext("2d");
+
+    const outerRadius = brushWidth / 2;
+    const innerRadius = outerRadius / 4;
+
+    var gradient = ctx.createRadialGradient(
+      pt.x,
+      pt.y,
+      innerRadius,
+      pt.x,
+      pt.y,
+      outerRadius
+    );
+    gradient.addColorStop(0, "rgba(0,0,0,1)");
+    gradient.addColorStop(0.4, "rgba(0,0,0,0.5)");
+    gradient.addColorStop(1, "rgba(0,0,0,0)");
+
+    ctx.globalCompositeOperation = "multiply";
+
+    ctx.beginPath();
+    ctx.arc(pt.x, pt.y, brushWidth / 2, 0, 2 * Math.PI);
+
+    ctx.fillStyle = gradient;
+    ctx.fill();
   };
 
   const getPointFromMouseEvent = (e) => {
@@ -55,40 +77,20 @@ export const DrawingCanvas = ({
   };
 
   const onMouseUp = () => {
-    setPoint((prev) => {
-      drawLine(prev, prev);
-      return null;
-    });
     setIsDrawing(false);
     onUpdateCanvas(canvas.current);
   };
 
-  const drawLine = (from, to) => {
-    if (!canvas || !canvas.current) return;
-    if (!from || !to) return;
-
-    const c = canvas.current;
-    const ctx = c.getContext("2d");
-    ctx.beginPath();
-
-    ctx.strokeStyle = "0";
-    ctx.moveTo(from.x, from.y);
-    ctx.lineTo(to.x, to.y);
-    ctx.lineCap = "round";
-    ctx.lineJoin = "round";
-    ctx.lineWidth = brushWidth;
-    ctx.stroke();
-  };
-
-  //<button onClick={clearCanvas}>CLEAR</button>
-
   return (
-    <canvas
-      ref={canvas}
-      onMouseDown={onMouseDown}
-      onMouseMove={onMouseMove}
-      onMouseOut={onMouseUp}
-      onMouseUp={onMouseUp}
-    />
+    <>
+      <button onClick={clearCanvas}>CLEAR</button>
+      <canvas
+        ref={canvas}
+        onMouseDown={onMouseDown}
+        onMouseMove={onMouseMove}
+        onMouseOut={onMouseUp}
+        onMouseUp={onMouseUp}
+      />
+    </>
   );
 };
