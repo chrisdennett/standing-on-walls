@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
+import { MouseFollower } from "../mouseFollower/MouseFollower";
 
 export const DrawingCanvas = ({
   className,
@@ -68,6 +69,7 @@ export const DrawingCanvas = ({
 
     ctx.fillStyle = gradient;
     ctx.fill();
+    onUpdateCanvas(c);
   };
 
   const getPointFromMouseEvent = (e) => {
@@ -85,6 +87,7 @@ export const DrawingCanvas = ({
 
   return (
     <>
+      <MouseFollower size={brushWidth} />
       <div>
         <canvas
           ref={canvas}

@@ -1,10 +1,11 @@
 import React from "react";
 import { SliderControl } from "../slider/SliderControl";
 
-export const Controls = ({ params, setParams }) => {
+export const Controls = ({ params, setParams, onSaveImg }) => {
   return (
     <div>
       <h1>Controls</h1>
+      <button onClick={onSaveImg}>SAVE IMAGE</button>
       <SliderControl
         label={"Top Pic Transparency"}
         value={params.topOpacity}

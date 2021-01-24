@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import styles from "./app.module.css";
 import { Controls, defaultParams } from "./components/controls/Controls";
 import { DrawingCanvas } from "./components/drawingCanvas/DrawingCanvas";
-import { loadImage } from "./helpers/helpers";
+import { loadImage, saveCanvas } from "./helpers/helpers";
 
 const App = () => {
   const [params, setParams] = useState(defaultParams);
@@ -22,7 +22,7 @@ const App = () => {
       const wToHRatio = origH / origW;
 
       const canvas = canvasRef.current;
-      canvas.width = 700;
+      canvas.width = 960;
       canvas.height = canvas.width * wToHRatio;
 
       setCanvasDimensions({ w: canvas.width, h: canvas.height });
@@ -44,10 +44,14 @@ const App = () => {
     });
   };
 
+  const onSaveImg = () => {
+    saveCanvas(canvasRef.current);
+  };
+
   return (
     <div className={styles.page}>
       <div>
-        <Controls params={params} setParams={setParams} />
+        <Controls params={params} setParams={setParams} onSaveImg={onSaveImg} />
       </div>
 
       <div className={styles.canvasStack}>
