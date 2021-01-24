@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 
 export const DrawingCanvas = ({
+  className,
   onUpdateCanvas,
   width = 200,
   height = 200,
@@ -84,14 +85,17 @@ export const DrawingCanvas = ({
 
   return (
     <>
+      <div>
+        <canvas
+          ref={canvas}
+          className={className}
+          onMouseDown={onMouseDown}
+          onMouseMove={onMouseMove}
+          onMouseOut={onMouseUp}
+          onMouseUp={onMouseUp}
+        />
+      </div>
       <button onClick={clearCanvas}>CLEAR</button>
-      <canvas
-        ref={canvas}
-        onMouseDown={onMouseDown}
-        onMouseMove={onMouseMove}
-        onMouseOut={onMouseUp}
-        onMouseUp={onMouseUp}
-      />
     </>
   );
 };

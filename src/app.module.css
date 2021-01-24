@@ -1,5 +1,17 @@
 .page {
-  background-color: whitesmoke;
   padding: 10px;
   min-height: 100vh;
+}
+
+.canvasStack {
+  position: relative;
+}
+
+.drawingCanvas {
+  position: absolute;
+  opacity: 0;
+}
+
+.displayCanvas {
+  position: absolute;
 }

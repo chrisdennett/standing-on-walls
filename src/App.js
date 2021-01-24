@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import styles from "./app.module.css";
 import { Controls, defaultParams } from "./components/controls/Controls";
 import { DrawingCanvas } from "./components/drawingCanvas/DrawingCanvas";
 import { loadImage } from "./helpers/helpers";
@@ -44,18 +45,22 @@ const App = () => {
   };
 
   return (
-    <div>
+    <div className={styles.page}>
       <div>
         <Controls params={params} setParams={setParams} />
       </div>
-      {canvasDimensions && (
-        <DrawingCanvas
-          onUpdateCanvas={onMaskImgObjChange}
-          width={canvasDimensions.w}
-          height={canvasDimensions.h}
-        />
-      )}
-      <canvas ref={canvasRef} />
+
+      <div className={styles.canvasStack}>
+        <canvas className={styles.displayCanvas} ref={canvasRef} />
+        {canvasDimensions && (
+          <DrawingCanvas
+            className={styles.drawingCanvas}
+            onUpdateCanvas={onMaskImgObjChange}
+            width={canvasDimensions.w}
+            height={canvasDimensions.h}
+          />
+        )}
+      </div>
     </div>
   );
 };
