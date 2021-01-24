@@ -6,8 +6,23 @@ export const Controls = ({ params, setParams }) => {
     <div>
       <h1>Controls</h1>
       <SliderControl
+        label={"Top Pic Transparency"}
         value={params.topOpacity}
         onChange={(newValue) => setParams({ ...params, topOpacity: newValue })}
+      />
+      <SliderControl
+        label={"Bottom Pic Horizontal Pos"}
+        value={params.bottomX}
+        min={-0.8}
+        max={0.8}
+        onChange={(newValue) => setParams({ ...params, bottomX: newValue })}
+      />
+      <SliderControl
+        label={"Bottom Pic Vertical Pos"}
+        value={params.bottomY}
+        min={-0.8}
+        max={0.8}
+        onChange={(newValue) => setParams({ ...params, bottomY: newValue })}
       />
       <label>
         SHOW TOP PIC:{" "}
@@ -38,8 +53,8 @@ export const Controls = ({ params, setParams }) => {
 export const defaultParams = {
   showTopPic: true,
   showBottomPic: true,
-  topX: 0,
-  topY: 0,
-  topSizeFraction: 1,
   topOpacity: 0,
+  bottomX: 0,
+  bottomY: 0,
+  bottomSizeFraction: 1,
 };

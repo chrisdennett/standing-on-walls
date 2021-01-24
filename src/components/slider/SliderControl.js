@@ -3,18 +3,27 @@ import styles from "./slider.module.css";
 import { ImArrowDown2, ImArrowUp2 } from "react-icons/im";
 import ReactSlider from "react-slider";
 
-export const SliderControl = ({ value, onChange }) => {
-  const min = 0;
-  const max = 1;
-  const step = 0.1;
-
+export const SliderControl = ({
+  label,
+  subLabel,
+  value,
+  onChange,
+  min = 0,
+  max = 1,
+  step = 0.01,
+}) => {
   const onIncrease = () => onChange(value + step);
   const onDecrease = () => onChange(value - step);
 
   return (
     <div className={styles.sliderControl}>
       <h3 className={styles.label}>
-        BRUSH SIZE: <span>(use keyboard up/down arrow keys)</span>
+        {label}{" "}
+        {subLabel && (
+          <>
+            : <span>({subLabel})</span>
+          </>
+        )}
       </h3>
       <div className={styles.sliderUi}>
         <button className={styles.fineControlButt} onClick={onDecrease}>

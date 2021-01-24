@@ -21,7 +21,7 @@ const App = () => {
       const wToHRatio = origH / origW;
 
       const canvas = canvasRef.current;
-      canvas.width = 800;
+      canvas.width = 700;
       canvas.height = canvas.width * wToHRatio;
 
       setCanvasDimensions({ w: canvas.width, h: canvas.height });
@@ -32,37 +32,9 @@ const App = () => {
     if (!pics || !pics.bottomPic || !pics.topPic) return;
 
     const canvas = canvasRef.current;
-    const { width: origW, height: origH } = pics.bottomPic;
     const { w: targW, h: targH } = canvasDimensions;
 
-    // add a red colour behind to show up undeleted bits easily
-    const ctx = canvas.getContext("2d");
-    ctx.fillStyle = "red";
-    ctx.fillRect(0, 0, targW, targH);
-
-    // DRAW bottom pic
-    if (params.showBottomPic) {
-      ctx.drawImage(pics.bottomPic, 0, 0, origW, origH, 0, 0, targW, targH);
-    }
-
-    // CREATE MASKED TOP CANVAS
-    const maskedCanvas = document.createElement("canvas");
-    maskedCanvas.width = targW;
-    maskedCanvas.height = targH;
-    const maskCtx = maskedCanvas.getContext("2d");
-    maskCtx.clearRect(0, 0, targW, targH);
-
-    if (maskImgObj.canvas) {
-      maskCtx.drawImage(maskImgObj.canvas, 0, 0);
-      maskCtx.globalCompositeOperation = "source-out";
-      maskCtx.drawImage(pics.topPic, 0, 0, origW, origH, 0, 0, targW, targH);
-    }
-
-    if (params.showTopPic) {
-      ctx.globalAlpha = params.topOpacity;
-      ctx.drawImage(maskedCanvas, 0, 0);
-      ctx.globalAlpha = 1;
-    }
+    drawCanvas({ params, canvas, targW, targH, pics, maskImgObj });
   }, [maskImgObj, pics, canvasDimensions, params]);
 
   const onMaskImgObjChange = (canvas) => {
@@ -89,3 +61,49 @@ const App = () => {
 };
 
 export default App;
+
+const drawCanvas = ({ params, canvas, targW, targH, pics, maskImgObj }) => {
+  const { width: origW, height: origH } = pics.bottomPic;
+
+  // add a red colour behind to show up undeleted bits easily
+  const ctx = canvas.getContext("2d");
+  ctx.fillStyle = "red";
+  ctx.fillRect(0, 0, targW, targH);
+
+  // DRAW bottom pic
+  if (params.showBottomPic) {
+    const bottomXPos = params.bottomX * targW;
+    const bottomYPos = params.bottomY * targH;
+
+    ctx.drawImage(
+      pics.bottomPic,
+      0,
+      0,
+      origW,
+      origH,
+      bottomXPos,
+      bottomYPos,
+      targW,
+      targH
+    );
+  }
+
+  // CREATE MASKED TOP CANVAS
+  const maskedCanvas = document.createElement("canvas");
+  maskedCanvas.width = targW;
+  maskedCanvas.height = targH;
+  const maskCtx = maskedCanvas.getContext("2d");
+  maskCtx.clearRect(0, 0, targW, targH);
+
+  if (maskImgObj.canvas) {
+    maskCtx.drawImage(maskImgObj.canvas, 0, 0);
+    maskCtx.globalCompositeOperation = "source-out";
+    maskCtx.drawImage(pics.topPic, 0, 0, origW, origH, 0, 0, targW, targH);
+  }
+
+  if (params.showTopPic) {
+    ctx.globalAlpha = params.topOpacity;
+    ctx.drawImage(maskedCanvas, 0, 0);
+    ctx.globalAlpha = 1;
+  }
+};
