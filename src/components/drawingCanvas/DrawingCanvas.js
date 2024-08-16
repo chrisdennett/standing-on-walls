@@ -6,7 +6,7 @@ export const DrawingCanvas = ({
   onUpdateCanvas,
   width = 200,
   height = 200,
-  brushWidth = 50,
+  brushWidth = 10,
 }) => {
   const [isDrawing, setIsDrawing] = useState(false);
 

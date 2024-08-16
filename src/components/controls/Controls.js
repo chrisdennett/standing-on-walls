@@ -1,10 +1,12 @@
 import React from "react";
+import PhotoSelector from "../photoSelector/PhotoSelector";
 import { SliderControl } from "../slider/SliderControl";
 
-export const Controls = ({ params, setParams, onSaveImg }) => {
+export const Controls = ({ params, setParams, onSaveImg, onPhotoSelected }) => {
   return (
     <div>
       <h1>Controls</h1>
+      <PhotoSelector onPhotoSelected={onPhotoSelected} />
       <button onClick={onSaveImg}>SAVE IMAGE</button>
       <SliderControl
         label={"Top Pic Transparency"}

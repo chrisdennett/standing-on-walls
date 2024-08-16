@@ -14,9 +14,11 @@ const App = () => {
   // load samples if nothing set
   useEffect(() => {
     if (!pics.bottomPic) {
-      loadImage("./pic-1.jpg", (img) => setPics({ ...pics, bottomPic: img }));
+      loadImage("./img/wall.jpg", (img) =>
+        setPics({ ...pics, bottomPic: img })
+      );
     } else if (!pics.topPic) {
-      loadImage("./pic-2.jpg", (img) => setPics({ ...pics, topPic: img }));
+      loadImage("./img/kick2.jpg", (img) => setPics({ ...pics, topPic: img }));
     } else {
       const { width: origW, height: origH } = pics.bottomPic;
       const wToHRatio = origH / origW;
@@ -48,10 +50,20 @@ const App = () => {
     saveCanvas(canvasRef.current);
   };
 
+  const onPhotoSelected = (img) => {
+    // saveCanvas(canvasRef.current);
+    setPics({ ...pics, bottomPic: img });
+  };
+
   return (
     <div className={styles.page}>
       <div>
-        <Controls params={params} setParams={setParams} onSaveImg={onSaveImg} />
+        <Controls
+          params={params}
+          setParams={setParams}
+          onSaveImg={onSaveImg}
+          onPhotoSelected={onPhotoSelected}
+        />
       </div>
 
       <div className={styles.canvasStack}>
